@@ -26,7 +26,7 @@ public class ExceptionFilter : IExceptionFilter
         {
             var ex = (ErrorOnValidationException)context.Exception;
 
-            var errorResponse = new ResponseErrorJson(ex.Errors);
+            var errorResponse = new ResponseErrorJson(ex._errors);
 
             context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Result = new BadRequestObjectResult(errorResponse);

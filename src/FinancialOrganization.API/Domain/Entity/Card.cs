@@ -1,6 +1,5 @@
 ﻿using FinancialOrganization.API.Communication.Response;
 using FinancialOrganization.API.Exception.ExceptionsBase;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FinancialOrganization.API.Domain.Entity;
 
@@ -19,7 +18,7 @@ public class Card : EntityBase
     }
 
     #region Setters
-     public void setName(string name)
+     public void UpdateName(string name)
     {
         Name = name;
         UpdatedAt = DateTime.UtcNow;
