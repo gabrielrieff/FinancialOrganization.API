@@ -1,4 +1,8 @@
-﻿namespace FinancialOrganization.API.Domain.Entity;
+﻿using FinancialOrganization.API.Communication.Response;
+using FinancialOrganization.API.Exception.ExceptionsBase;
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace FinancialOrganization.API.Domain.Entity;
 
 public class Card : EntityBase
 {
@@ -6,7 +10,10 @@ public class Card : EntityBase
 
     public Card(string name)
     {
+        Id = Guid.NewGuid();
         Name = name;
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
 
         Validate();
     }
@@ -15,6 +22,8 @@ public class Card : EntityBase
      public void setName(string name)
     {
         Name = name;
+        UpdatedAt = DateTime.UtcNow;
+
         Validate();
     }
     #endregion
@@ -25,7 +34,8 @@ public class Card : EntityBase
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
-            throw new Exception("Name is required");
+            var error = new ResponseErrorJson("Name is required");
+            throw new ErrorOnValidationException(error.ErrorMessages);
         }
     }
     #endregion
