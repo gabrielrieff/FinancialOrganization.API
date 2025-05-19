@@ -1,13 +1,18 @@
-var builder = WebApplication.CreateBuilder(args);
+using FinancialOrganization.API.Application;
+using FinancialOrganization.API.Filters;
 
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMvc((opt) => opt.Filters.Add(typeof(ExceptionFilter)));
+
+builder.Services.AddApplication();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
