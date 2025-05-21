@@ -1,6 +1,5 @@
 ﻿namespace FinancialOrganization.UnitTests.Domain.Entity.Card;
 
-using Bogus.DataSets;
 using FinancialOrganization.API.Exception.ExceptionsBase;
 using FluentAssertions;
 using DomainEntity = API.Domain.Entity;
@@ -23,14 +22,14 @@ public class CardTest
         var validCard = _cardTestFixture.GetValidCard();
         var datetimeBefore = DateTime.UtcNow;
 
-        var category = new DomainEntity.Card(validCard.Name);
+        var card = new DomainEntity.Card(validCard.Name);
         var datetimeAfter = DateTime.UtcNow;
 
-        category.Name.Should().Be(validCard.Name);
-        category.Id.Should().NotBe(default(Guid));
-        category.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
-        category.CreatedAt.Should().NotBeBefore(datetimeBefore);
-        category.CreatedAt.Should().NotBeAfter(datetimeAfter);
+        card.Name.Should().Be(validCard.Name);
+        card.Id.Should().NotBe(default(Guid));
+        card.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
+        card.CreatedAt.Should().NotBeBefore(datetimeBefore);
+        card.CreatedAt.Should().NotBeAfter(datetimeAfter);
     }
 
     [Theory(DisplayName = nameof(ErroWhenNameIsEmpty))]

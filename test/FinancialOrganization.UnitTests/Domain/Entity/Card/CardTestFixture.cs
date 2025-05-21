@@ -13,4 +13,4 @@ public class CardTestFixture : BaseFixture
 }
 
 [CollectionDefinition(nameof(CardTestFixture))]
-public class CategoryTestFixtureCollection : ICollectionFixture<CardTestFixture> { }
+public class CardTestFixtureCollection : ICollectionFixture<CardTestFixture> { }
