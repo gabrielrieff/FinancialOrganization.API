@@ -11,11 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\UseCase\Cards\GetAll\" />
-    <Folder Include="Application\UseCase\Cards\Delete\" />
-    <Folder Include="Application\UseCase\Cards\Update\" />
-    <Folder Include="Domain\Enums\" />
-    <Folder Include="Domain\Repositories\" />
     <Folder Include="Infrasctructure\" />
   </ItemGroup>
 
