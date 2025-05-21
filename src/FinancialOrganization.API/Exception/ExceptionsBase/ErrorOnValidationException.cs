@@ -1,10 +1,12 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Net;
 
 namespace FinancialOrganization.API.Exception.ExceptionsBase;
 
 public class ErrorOnValidationException : FinancialOrganizationException
 {
-    public List<string> _errors { get; set; } = [];
+    public List<string> _errors;
+
+    public override int StatusCode => (int)HttpStatusCode.BadRequest;
 
     public ErrorOnValidationException(List<string> errorMessages) : base(string.Empty)
     {

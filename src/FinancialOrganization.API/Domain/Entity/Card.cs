@@ -9,10 +9,7 @@ public class Card : EntityBase
 
     public Card(string name)
     {
-        Id = Guid.NewGuid();
         Name = name;
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
 
         Validate();
     }

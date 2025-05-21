@@ -5,5 +5,5 @@ namespace FinancialOrganization.API.Application.UseCase.Cards.Register;
 
 public interface IRegisterCardUseCase
 {
-    RegisterCardResponse Execute(RegisterCardRequest request);
+    Task<RegisterCardResponse> Execute(RegisterCardRequest request, CancellationToken cancellationToken);
 }
