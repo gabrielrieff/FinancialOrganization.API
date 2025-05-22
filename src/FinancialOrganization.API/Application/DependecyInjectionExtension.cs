@@ -17,7 +17,7 @@ public static class DependecyInjectionExtension
         //Card
         services.AddScoped<IRegisterCardUseCase, RegisterCardUseCase>();
         services.AddScoped<IUpdateCardUseCase, UpdateCardUseCase>();
-        services.AddScoped<IGetAllUseCase, GetAllUseCase>();
+        services.AddScoped<IListUseCase, ListUseCase>();
         services.AddScoped<IDeleteCardUseCase, DeleteCardUseCase>();
 
 

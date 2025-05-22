@@ -4,10 +4,10 @@ using FinancialOrganization.API.Domain.Repositories.Cards;
 using Moq;
 
 namespace FinancialOrganization.UnitTests.Application.UseCase.Cards.GetAll;
-public class GetAllTestFixture : BaseFixture
+public class ListTestFixture : BaseFixture
 {
     public Card GetCard() => new Card(Faker.Person.FirstName);
-    public IList<Card> GetCollection(uint count = 2)
+    public IReadOnlyList<Card> GetCollection(uint count = 2)
     {
         var list = new List<Card>();
 
@@ -26,5 +26,5 @@ public class GetAllTestFixture : BaseFixture
 
     public Mock<ICardRepository> GetRepositoryMock() => new();
 }
-[CollectionDefinition(nameof(GetAllTestFixture))]
-public class GetAllTestFixtureCollection : ICollectionFixture<GetAllTestFixture> { }
+[CollectionDefinition(nameof(ListTestFixture))]
+public class GetAllTestFixtureCollection : ICollectionFixture<ListTestFixture> { }
