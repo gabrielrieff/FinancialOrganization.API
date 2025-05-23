@@ -1,0 +1,12 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Numsey#2021"
+    ports:
+      - "14433:1433"
+    expose:
+      - "1433"
+    volumes:
+      - c:\dados\volumes\mssql:/var/opt/mssql3

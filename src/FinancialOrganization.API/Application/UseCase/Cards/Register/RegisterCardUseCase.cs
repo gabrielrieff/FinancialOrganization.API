@@ -19,8 +19,8 @@ public class RegisterCardUseCase : IRegisterCardUseCase
 
     public async Task<RegisterCardResponse> Execute(RegisterCardRequest request, CancellationToken cancellationToken)
     {
+        
         var card = new Card(request.Name);
-
         await _repository.Register(card, cancellationToken);
 
         await _unitOfWork.Commit(cancellationToken);

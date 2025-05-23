@@ -10,24 +10,32 @@ namespace FinancialOrganization.API.Controllers;
 [ApiController]
 public class CardController : ControllerBase
 {
-    //[HttpPost]
-    //[ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status201Created)]
-    //[ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    //public IActionResult Register([FromBody] RegisterCardRequest request, [FromServices] IRegisterCardUseCase useCase)
-    //{
-    //    var result = useCase.Execute(request);
+    [HttpPost]
+    [ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Register(
+        [FromBody] RegisterCardRequest request,
+        [FromServices] IRegisterCardUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+            var result = await useCase.Execute(request, cancellationToken);
 
-    //    return Created(string.Empty, result);
-    //}
+           return Created(string.Empty, result);
 
-    //[HttpPut]
-    //[Route("{id}")]
-    //[ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    //public IActionResult Update([FromBody] UpdateCardRequest request, [FromRoute] long id, [FromServices] IUpdateCardUseCase useCase)
-    //{
-    //    useCase.Execute(request, id);
+    }
 
-    //    return Ok();
-    //}
+    [HttpPut]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Update(
+        [FromBody] UpdateCardRequest request, 
+        [FromRoute] Guid id, 
+        [FromServices] IUpdateCardUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        useCase.Execute(request, id, cancellationToken);
+
+        return Ok();
+    }
 }
