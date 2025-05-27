@@ -2,7 +2,7 @@
 
 namespace FinancialOrganization.API.Application.UseCase.Cards.ListAll;
 
-public interface IListAll
+public interface IListAllUseCase
 {
     Task<ListAllResponse> Execute(CancellationToken cancellationToken);
 }

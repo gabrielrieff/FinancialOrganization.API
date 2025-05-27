@@ -3,11 +3,11 @@ using FinancialOrganization.API.Domain.Repositories.Cards;
 
 namespace FinancialOrganization.API.Application.UseCase.Cards.ListAll;
 
-public class ListAll : IListAll
+public class ListAllUseCase : IListAllUseCase
 {
     private readonly ICardRepository _repository;
 
-    public ListAll(ICardRepository repository)
+    public ListAllUseCase(ICardRepository repository)
     {
         _repository = repository;
     }
