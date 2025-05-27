@@ -26,15 +26,9 @@ public static class DependecyInjectionExtension
     {
 
         var connectionString = configuration.GetConnectionString("connection");
+        Console.WriteLine(connectionString);
 
         services.AddDbContext<FinancialOrganizationDbContext>(config => 
-            config.UseSqlServer(connectionString, 
-                sqlServerOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 5,
-                        maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null);
-                }));
+            config.UseSqlServer(connectionString));
     }
 }
