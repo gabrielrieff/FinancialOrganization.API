@@ -1,5 +1,6 @@
 ﻿using FinancialOrganization.API.Application.UseCase.Cards.Delete;
 using FinancialOrganization.API.Application.UseCase.Cards.GetAll;
+using FinancialOrganization.API.Application.UseCase.Cards.ListAll;
 using FinancialOrganization.API.Application.UseCase.Cards.Register;
 using FinancialOrganization.API.Application.UseCase.Cards.Update;
 
@@ -17,8 +18,9 @@ public static class DependecyInjectionExtension
         //Card
         services.AddScoped<IRegisterCardUseCase, RegisterCardUseCase>();
         services.AddScoped<IUpdateCardUseCase, UpdateCardUseCase>();
-        services.AddScoped<IListUseCase, ListUseCase>();
+        services.AddScoped<ISearchListUseCase, SearchListUseCase>();
         services.AddScoped<IDeleteCardUseCase, DeleteCardUseCase>();
+        services.AddScoped<IListAll, ListAll>();
 
 
     }

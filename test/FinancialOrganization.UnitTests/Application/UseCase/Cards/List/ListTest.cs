@@ -49,7 +49,7 @@ public class ListTest
             ),
             It.IsAny<CancellationToken>())).ReturnsAsync(outputRepositorySearch);
 
-        var useCase = new ListUseCase(repositoryMock.Object);
+        var useCase = new SearchListUseCase(repositoryMock.Object);
 
         var result = await useCase.Execute(request, CancellationToken.None);
 

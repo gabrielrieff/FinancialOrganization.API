@@ -22,15 +22,11 @@ public class ExceptionFilter : IExceptionFilter
 
     private void HandleProjecException(ExceptionContext context)
     {
-        if(context.Exception is ErrorOnValidationException)
-        {
-            var ex = (ErrorOnValidationException)context.Exception;
+        var financialORganizationException = (FinancialOrganizationException)context.Exception;
+        var errorMessage = new ResponseErrorJson(financialORganizationException.GetErrors());
 
-            var errorResponse = new ResponseErrorJson(ex._errors);
-
-            context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-            context.Result = new BadRequestObjectResult(errorResponse);
-        }
+        context.HttpContext.Response.StatusCode = financialORganizationException.StatusCode;
+        context.Result = new ObjectResult(errorMessage);
     }
 
     private void ThrowUnkowError(ExceptionContext context)

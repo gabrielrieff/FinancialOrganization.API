@@ -4,7 +4,7 @@ using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 
 namespace FinancialOrganization.API.Application.UseCase.Cards.GetAll;
 
-public interface IListUseCase
+public interface ISearchListUseCase
 {
     Task<SearchOutput<RegisterCardResponse>> Execute(SearchListRequest request, CancellationToken cancellationToken);
 }
