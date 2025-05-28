@@ -57,7 +57,7 @@ public class CardController : ControllerBase
     [HttpGet()]
     [ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> List([FromServices] IListAll useCase, CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromServices] IListAllUseCase useCase, CancellationToken cancellationToken)
     {
         var result = await useCase.Execute(cancellationToken);
 

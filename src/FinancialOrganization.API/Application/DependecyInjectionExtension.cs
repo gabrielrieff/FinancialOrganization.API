@@ -20,7 +20,7 @@ public static class DependecyInjectionExtension
         services.AddScoped<IUpdateCardUseCase, UpdateCardUseCase>();
         services.AddScoped<ISearchListUseCase, SearchListUseCase>();
         services.AddScoped<IDeleteCardUseCase, DeleteCardUseCase>();
-        services.AddScoped<IListAll, ListAll>();
+        services.AddScoped<IListAllUseCase, ListAllUseCase>();
 
 
     }

@@ -6,47 +6,48 @@ namespace FinancialOrganization.API.Domain.Entity;
 public class Movement : EntityBase
 {
     public MovementType Type { get; private set; }
-    public decimal Amount { get; private set; }
+    public decimal AmountTotal { get; private set; }
     public string Description { get; private set; }
     public CategoryType Category { get; private set; }
     public Status Status { get; private set; }
-    public bool IsReccuring { get; private set; }
-    public long CardID { get; private set; }
+    public InstallmentPlan? InstallmentPlan { get; private set; } = default!;
+    public Guid? InstallmentPlanId { get; private set; }
+    public Guid CardID { get; private set; }
     public Card Card { get; private set; } = default!;
 
     public Movement(
         MovementType type,
-        decimal amount,
+        decimal amountTotal,
         string description,
         CategoryType category,
-        long cardID,
-        bool isReccuring = false,
+        //Guid userId,
+        Guid cardID,
+        Guid? installmentPlanId = null,
         Status status = Status.Waiting)
     {
         Type = type;
-        Amount = amount;
+        AmountTotal = amountTotal;
         Description = description;
         Category = category;
         Status = status;
-        IsReccuring = isReccuring;
+        //UserId = userId;
         CardID = cardID;
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        InstallmentPlanId = installmentPlanId;
 
         Validate();
     }
 
 
     #region Setters
-    public void UpdateAmount(decimal amount)
+    public void UpdateAmount(decimal amountTotal)
     {
-        Amount = amount;
+        AmountTotal = amountTotal;
         UpdatedAt = DateTime.UtcNow;
 
         Validate();
     }
     
-    public void UpdateCard(long cardID)
+    public void UpdateCard(Guid cardID)
     {
         CardID = cardID;
         UpdatedAt = DateTime.UtcNow;
@@ -82,9 +83,9 @@ public class Movement : EntityBase
                 error.Add("Description must be less than 100 characters");
             else if (Description.Length < 10)
                 error.Add("Description must be more than 10 characters");
-            else if (Amount <= 0)
+            else if (AmountTotal <= 0)
                 error.Add("Amount must be greater than 0");
-            else if (CardID <= 0)
+            else if (Id != null)
                 error.Add("CardID is required");
             else if (Category.Equals(typeof(CategoryType)))
                 error.Add("Category is required");
