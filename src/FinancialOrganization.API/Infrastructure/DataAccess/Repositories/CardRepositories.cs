@@ -49,7 +49,6 @@ public class CardRepositories : ICardRepository
             .Take(input.PerPage)
             .ToListAsync();
         return new(input.Page, input.PerPage, total, items);
-
     }
 
     public void Update(Card entity, CancellationToken cancellationToken)

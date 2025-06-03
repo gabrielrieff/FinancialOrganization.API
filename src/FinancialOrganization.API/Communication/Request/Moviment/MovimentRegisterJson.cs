@@ -11,5 +11,5 @@ public class MovimentRegisterJson
     public DateTime InitialDate { get; set; }
     public MovementType Type { get; set; }
     public CategoryType Category { get; set; }
-    public Status Status { get; set; }
+    public Status? Status { get; set; }
 }

@@ -5,5 +5,5 @@ namespace FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 
 public interface IListAllMovementsUseCase
 {
-    public Task<ListAllMovementJson> Execute();
+    public Task<MovementJson> Execute();
 }

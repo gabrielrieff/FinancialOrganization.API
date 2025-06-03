@@ -2,7 +2,7 @@
 
 namespace FinancialOrganization.API.Communication.Response.Movement;
 
-public class ListAllMovementJson
+public class MovementJson
 {
     public MovementType Type { get; set; }
     public decimal AmountTotal { get; set; }

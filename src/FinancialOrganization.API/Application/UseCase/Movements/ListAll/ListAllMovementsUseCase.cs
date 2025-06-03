@@ -13,11 +13,11 @@ public class ListAllMovementsUseCase : IListAllMovementsUseCase
         _movementRepo = movementRepo;
     }
 
-    public async Task<ListAllMovementJson> Execute()
+    public async Task<MovementJson> Execute()
     {
         var result = await _movementRepo.Get();
 
-        return new ListAllMovementJson
+        return new MovementJson
         {
             AmountTotal = result.AmountTotal,
             CardID = result.CardID,

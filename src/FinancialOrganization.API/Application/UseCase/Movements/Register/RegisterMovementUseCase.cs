@@ -35,9 +35,7 @@ public class RegisterMovementUseCase : IRegisterMovementUseCase
                         request.Description,
                         request.Category,
                         request.CardID,
-                        status: request.Status);
-
-        await _movementRepo.Register(movement, cancellationToken);
+                        status: (Status)request.Status);
 
         var installmentPlan = new InstallmentPlan(
             totalInstallment: request.Installments,
@@ -46,7 +44,6 @@ public class RegisterMovementUseCase : IRegisterMovementUseCase
             cardID: request.CardID
             );
 
-        await _installmentPlanRepo.Register(installmentPlan, cancellationToken);
 
         var installments = new List<Installment>();
         for (int i = 0; i < installmentPlan.TotalInstallment; i++)
@@ -60,7 +57,12 @@ public class RegisterMovementUseCase : IRegisterMovementUseCase
                 ));
         }
 
-        await _installmentRepo.Register(installments, cancellationToken);
+        await Task.WhenAll(
+        _movementRepo.Register(movement, cancellationToken),
+        _installmentPlanRepo.Register(installmentPlan, cancellationToken),
+        _installmentRepo.Register(installments, cancellationToken)
+
+        );
 
         await _unitOfWork.Commit(cancellationToken);
 
