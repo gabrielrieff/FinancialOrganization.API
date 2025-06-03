@@ -5,7 +5,7 @@ using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 using FinancialOrganization.API.Infrasctructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinancialOrganization.API.Infrastructure.DataAccess.Repositories.Cards;
+namespace FinancialOrganization.API.Infrastructure.DataAccess.Repositories;
 
 public class CardRepositories : ICardRepository
 {
@@ -41,7 +41,7 @@ public class CardRepositories : ICardRepository
         var toSkip = (input.Page - 1) * input.PerPage;
         var query = _dbContext.Cards.AsNoTracking();
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
-        if (!String.IsNullOrWhiteSpace(input.Search))
+        if (!string.IsNullOrWhiteSpace(input.Search))
             query = query.Where(x => x.Name.Contains(input.Search));
         var total = await query.CountAsync();
         var items = await query

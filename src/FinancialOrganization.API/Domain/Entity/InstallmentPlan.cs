@@ -8,18 +8,18 @@ public class InstallmentPlan : EntityBase
     public DateTime InitialDate { get; private set; }
     public DateTime FinalDate { get; private set; }
     public Guid MovementId { get; private set; }
-    public Guid CardID { get; private set; }
+    public Guid? CardID { get; private set; }
 
     // Navigation properties
     public Movement Movement { get; private set; } = default!;
-    public Card Card { get; private set; } = default!;
+    public Card? Card { get; private set; } = default!;
     public ICollection<Installment> Installments { get; private set; } = new List<Installment>();
 
     public InstallmentPlan(
         int totalInstallment,
         DateTime initialDate,
         Guid movementId,
-        Guid cardID)
+        Guid? cardID = null)
     {
         TotalInstallment = totalInstallment;
         InitialDate = initialDate;

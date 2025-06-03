@@ -12,8 +12,8 @@ public class Movement : EntityBase
     public Status Status { get; private set; }
     public InstallmentPlan? InstallmentPlan { get; private set; } = default!;
     public Guid? InstallmentPlanId { get; private set; }
-    public Guid CardID { get; private set; }
-    public Card Card { get; private set; } = default!;
+    public Guid? CardID { get; private set; }
+    public Card? Card { get; private set; } = default!;
 
     public Movement(
         MovementType type,
@@ -21,7 +21,7 @@ public class Movement : EntityBase
         string description,
         CategoryType category,
         //Guid userId,
-        Guid cardID,
+        Guid? cardID = null,
         Guid? installmentPlanId = null,
         Status status = Status.Waiting)
     {
@@ -85,8 +85,6 @@ public class Movement : EntityBase
                 error.Add("Description must be more than 10 characters");
             else if (AmountTotal <= 0)
                 error.Add("Amount must be greater than 0");
-            else if (Id != null)
-                error.Add("CardID is required");
             else if (Category.Equals(typeof(CategoryType)))
                 error.Add("Category is required");
 

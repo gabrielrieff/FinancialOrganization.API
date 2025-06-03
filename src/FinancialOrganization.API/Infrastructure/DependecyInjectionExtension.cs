@@ -1,8 +1,10 @@
 ﻿using FinancialOrganization.API.Domain.Repositories;
 using FinancialOrganization.API.Domain.Repositories.Cards;
+using FinancialOrganization.API.Domain.Repositories.Installments;
+using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Infrasctructure.DataAccess;
 using FinancialOrganization.API.Infrastructure.DataAccess;
-using FinancialOrganization.API.Infrastructure.DataAccess.Repositories.Cards;
+using FinancialOrganization.API.Infrastructure.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinancialOrganization.API.Infrasctructure;
@@ -20,13 +22,17 @@ public static class DependecyInjectionExtension
 
         //card
         services.AddScoped<ICardRepository, CardRepositories>();
+
+        //Movement
+        services.AddScoped<IMovementRepository, MovementRepositories>();
+        services.AddScoped<IInstallmentPlanRepository, InstallmentPlanRepositories>();
+        services.AddScoped<IInstallmentRepository, InstallmentRepostories>();
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
     {
 
         var connectionString = configuration.GetConnectionString("connection");
-        Console.WriteLine(connectionString);
 
         services.AddDbContext<FinancialOrganizationDbContext>(config => 
             config.UseSqlServer(connectionString));
