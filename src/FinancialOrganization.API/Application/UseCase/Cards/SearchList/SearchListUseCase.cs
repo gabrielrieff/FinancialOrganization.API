@@ -1,4 +1,4 @@
-﻿using FinancialOrganization.API.Communication.Response;
+﻿using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Response.Cards;
 using FinancialOrganization.API.Domain.Repositories.Cards;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
