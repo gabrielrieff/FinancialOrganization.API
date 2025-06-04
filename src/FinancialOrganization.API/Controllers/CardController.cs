@@ -3,6 +3,7 @@ using FinancialOrganization.API.Application.UseCase.Cards.GetAll;
 using FinancialOrganization.API.Application.UseCase.Cards.ListAll;
 using FinancialOrganization.API.Application.UseCase.Cards.Register;
 using FinancialOrganization.API.Application.UseCase.Cards.Update;
+using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Request.Cards;
 using FinancialOrganization.API.Communication.Response;
 using FinancialOrganization.API.Communication.Response.Cards;

@@ -1,8 +1,10 @@
 ﻿using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 using FinancialOrganization.API.Application.UseCase.Movements.Register;
 using FinancialOrganization.API.Application.UseCase.Movements.SearchList;
+using FinancialOrganization.API.Application.UseCase.Movements.Update;
 using FinancialOrganization.API.Application.UseCase.Movements.UpdateAmount;
 using FinancialOrganization.API.Application.UseCase.Movements.UpdateStatus;
+using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Request.Moviment;
 using FinancialOrganization.API.Communication.Response;
 using FinancialOrganization.API.Communication.Response.Movement;
@@ -90,6 +92,23 @@ public class MovementController : ControllerBase
         await useCase.Execute(id, request, cancellationToken);
 
         var message = new SuccessfullyResponseJson("Updated the status successfully.");
+
+        return Ok(message);
+    }
+    
+    [HttpPut]
+    [Route("{id}/update")]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SuccessfullyResponseJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Update(
+    [FromBody] UpdateMovementJson request,
+    [FromRoute] Guid id,
+    [FromServices] IUpdateMovementUseCase useCase,
+    CancellationToken cancellationToken)
+    {
+        await useCase.Execute(id, request, cancellationToken);
+
+        var message = new SuccessfullyResponseJson("Updated the successfully.");
 
         return Ok(message);
     }

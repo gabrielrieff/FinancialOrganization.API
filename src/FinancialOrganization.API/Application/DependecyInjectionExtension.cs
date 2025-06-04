@@ -6,6 +6,7 @@ using FinancialOrganization.API.Application.UseCase.Cards.Update;
 using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 using FinancialOrganization.API.Application.UseCase.Movements.Register;
 using FinancialOrganization.API.Application.UseCase.Movements.SearchList;
+using FinancialOrganization.API.Application.UseCase.Movements.Update;
 using FinancialOrganization.API.Application.UseCase.Movements.UpdateAmount;
 using FinancialOrganization.API.Application.UseCase.Movements.UpdateStatus;
 
@@ -30,10 +31,11 @@ public static class DependecyInjectionExtension
         services.AddScoped<IRegisterMovementUseCase, RegisterMovementUseCase>();
         services.AddScoped<IListAllMovementsUseCase, ListAllMovementsUseCase>();
         services.AddScoped<ISearchListMovementUseCase, SearchListMovementUseCase>();
-
-        //Installment
         services.AddScoped<IUpdateAmountMovementUseCase, UpdateAmountMovementUseCase>();
         services.AddScoped<IUpdateStatusMovementUseCase, UpdateStatusMovementUseCase>();
+        services.AddScoped<IUpdateMovementUseCase, UpdateMovementUseCase>();
+
+        //Installment
 
     }
 }
