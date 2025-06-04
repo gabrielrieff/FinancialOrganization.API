@@ -20,6 +20,7 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
             page: request.Page,
             perPage: request.PerPage,
             search: request.Search,
+            searchDate: request.SearchDate,
             orderBy: request.Sort,
             order: request.Dir
         );
@@ -41,7 +42,7 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
                 Status = movement.Status,
                 InstallmentPlan = new InstallmentPlanJson
                 {
-                    Id = movement.InstallmentPlan!.Id,
+                    Id = movement.InstallmentPlan.Id,
                     FinalDate = movement.InstallmentPlan!.FinalDate,
                     InitialDate = movement.InstallmentPlan!.InitialDate,
                     Installments = movement.InstallmentPlan!.Installments.Select(installment => new InstallmentJson

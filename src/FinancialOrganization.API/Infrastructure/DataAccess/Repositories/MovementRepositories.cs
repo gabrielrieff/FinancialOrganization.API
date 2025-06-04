@@ -1,10 +1,10 @@
-﻿using FinancialOrganization.API.Domain.Entity;
+﻿using FinancialOrganization.API.Communication.DTOs;
+using FinancialOrganization.API.Domain.Entity;
 using FinancialOrganization.API.Domain.Enums;
 using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 using FinancialOrganization.API.Infrasctructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace FinancialOrganization.API.Infrastructure.DataAccess.Repositories;
 
@@ -46,23 +46,58 @@ public class MovementRepositories : IMovementRepository
         await _dbContext.Movements.AddAsync(entity, cancellationToken);
     }
 
-    public async Task<SearchOutput<Movement>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<MovementDto>> Search(SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
-        IQueryable<Movement> query = _dbContext.Movements
+
+        var startDate = input.SearchDate.HasValue
+            ? new DateTime(input.SearchDate.Value.Year, input.SearchDate.Value.Month, 1)
+            : (DateTime?)null;
+
+        var endDate = startDate?.AddMonths(1).AddDays(-1);
+
+        var query = _dbContext.Movements
             .AsNoTracking()
-            .Include(p => p.InstallmentPlan)
-                .ThenInclude(i => i.Installments);
+            .Where(m => string.IsNullOrWhiteSpace(input.Search) || m.Description.Contains(input.Search))
+            .Select(m => new MovementDto
+            {
+                Id = m.Id,
+                Description = m.Description,
+                AmountTotal = m.AmountTotal,
+                Type = m.Type,
+                Category = m.Category,
+                Status = m.Status,
+                CreatedAt = m.CreatedAt,
+                UpdatedAt = m.UpdatedAt,
+                InstallmentPlan = new InstallmentPlanDto
+                {
+                    CardID = m.CardID,
+                    FinalDate = m.InstallmentPlan.FinalDate,
+                    InitialDate = m.InstallmentPlan.InitialDate,
+                    TotalInstallment = m.InstallmentPlan.TotalInstallment,
+                    Installments = m.InstallmentPlan.Installments
+                        .Where(i => !startDate.HasValue || (i.DueDate >= startDate && i.DueDate <= endDate))
+                        .Select(i => new InstallmentDto
+                        {
+                            Id = i.Id,
+                            InstallmentNumber = i.InstallmentNumber,
+                            DueDate = i.DueDate,
+                            Amount = i.Amount,
+                            Status = i.Status
+                        }).ToList()
+                }
+            });
 
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
-        if (!string.IsNullOrWhiteSpace(input.Search))
-            query = query.Where(x => x.Description.Contains(input.Search));
-        var total = await query.CountAsync();
+
+        var total = await query.CountAsync(cancellationToken);
+
         var items = await query
             .Skip(toSkip)
             .Take(input.PerPage)
-            .ToListAsync();
-        return new(input.Page, input.PerPage, total, items);
+            .ToListAsync(cancellationToken);
+
+        return new SearchOutput<MovementDto>(input.Page, input.PerPage, total, items);
     }
 
     public void Update(Movement entity, CancellationToken cancellationToken)
@@ -70,8 +105,8 @@ public class MovementRepositories : IMovementRepository
         _dbContext.Movements.Update(entity);
     }
 
-    private IQueryable<Movement> AddOrderToQuery(
-        IQueryable<Movement> query,
+    private IQueryable<MovementDto> AddOrderToQuery(
+        IQueryable<MovementDto> query,
         string orderProperty,
         SearchOrder order
     )

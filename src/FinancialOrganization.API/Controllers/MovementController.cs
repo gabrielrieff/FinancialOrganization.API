@@ -44,13 +44,16 @@ public class MovementController : ControllerBase
     [FromServices] ISearchListMovementUseCase useCase,
     CancellationToken cancellationToken,
     [FromQuery] int? page = null,
+    [FromQuery] DateTime? searchDate = null,
     [FromQuery(Name = "per_page")] int? perPage = null,
     [FromQuery] string? search = null,
     [FromQuery] string? sort = null,
     [FromQuery] SearchOrder? dir = null)
     {
         var request = new SearchListRequest();
+
         if (page is not null) request.Page = page.Value;
+        if (searchDate is not null) request.SearchDate = searchDate.Value;
         if (perPage is not null) request.PerPage = perPage.Value;
         if (!String.IsNullOrWhiteSpace(search)) request.Search = search;
         if (!String.IsNullOrWhiteSpace(sort)) request.Sort = sort;

@@ -21,6 +21,7 @@ public class SearchListUseCase : ISearchListUseCase
             page: request.Page,
             perPage: request.PerPage,
             search: request.Search,
+            searchDate: request.SearchDate,
             orderBy: request.Sort,
             order: request.Dir
         );
