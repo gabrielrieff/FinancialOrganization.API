@@ -2,6 +2,7 @@
 using FinancialOrganization.API.Domain.Repositories.Installments;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 using FinancialOrganization.API.Infrasctructure.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialOrganization.API.Infrastructure.DataAccess.Repositories;
 
@@ -21,12 +22,12 @@ public class InstallmentRepostories : IInstallmentRepository
 
     public Task<Installment?> GetById(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return _dbContext.Installments.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
     }
 
     public async Task Register(List<Installment> entities, CancellationToken cancellationToken)
     {
-        await _dbContext.Installments.AddRangeAsync(entities);
+        await _dbContext.Installments.AddRangeAsync(entities, cancellationToken);
     }
 
     public Task<SearchOutput<Installment>> Search(SearchInput input, CancellationToken cancellationToken)

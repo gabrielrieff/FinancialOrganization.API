@@ -9,16 +9,16 @@ namespace FinancialOrganization.API.Application.UseCase.Movements.Update;
 public class UpdateMovementUseCase : IUpdateMovementUseCase
 {
     private readonly IMovementRepository _movementRepository;
-    private readonly IInstallmentRepository _installmentRepository;
+    private readonly IInstallmentPlanRepository _installmentPlanRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public UpdateMovementUseCase(
         IMovementRepository movementRepository, 
-        IInstallmentRepository installmentRepository, 
+        IInstallmentPlanRepository installmentPlanRepository, 
         IUnitOfWork unitOfWork)
     {
         _movementRepository = movementRepository;
-        _installmentRepository = installmentRepository;
+        _installmentPlanRepository = installmentPlanRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -32,7 +32,12 @@ public class UpdateMovementUseCase : IUpdateMovementUseCase
         }
 
         if(request.CardId is not null)
+        {
             movement.UpdateCard(request.CardId.Value);
+            movement.InstallmentPlan.UpdateCard(request.CardId.Value);
+            _installmentPlanRepository.Update(movement.InstallmentPlan, cancellationToken);
+        }
+
         if (request.CategoryType is not null)
             movement.UpdateCategory(request.CategoryType.Value);
         if (request.Description is not null)
