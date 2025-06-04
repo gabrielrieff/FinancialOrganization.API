@@ -1,9 +1,11 @@
 ﻿using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 using FinancialOrganization.API.Application.UseCase.Movements.Register;
 using FinancialOrganization.API.Application.UseCase.Movements.SearchList;
+using FinancialOrganization.API.Application.UseCase.Movements.UpdateAmount;
+using FinancialOrganization.API.Application.UseCase.Movements.UpdateStatus;
 using FinancialOrganization.API.Communication.Request.Moviment;
 using FinancialOrganization.API.Communication.Response;
-using FinancialOrganization.API.Communication.Response.Cards;
+using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +36,7 @@ public class MovementController : ControllerBase
 
     [HttpGet()]
     [Route("search-list")]
-    [ProducesResponseType(typeof(RegisterCardResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(MovementJson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SearchList(
     [FromServices] ISearchListMovementUseCase useCase,
@@ -56,5 +58,39 @@ public class MovementController : ControllerBase
 
         return Ok(result);
 
+    }
+
+    [HttpPut]
+    [Route("{id}/update-amount")]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SuccessfullyResponseJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateAmount(
+    [FromBody] UpdateMovementAmountJson request,
+    [FromRoute] Guid id,
+    [FromServices] IUpdateAmountMovementUseCase useCase,
+    CancellationToken cancellationToken)
+    {
+        await useCase.Execute(id, request, cancellationToken);
+
+        var message = new SuccessfullyResponseJson("Updated the value successfully.");
+
+        return Ok(message);
+    }
+
+    [HttpPut]
+    [Route("{id}/update-status")]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SuccessfullyResponseJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateStatus(
+    [FromBody] UpdateMovementStatusJson request,
+    [FromRoute] Guid id,
+    [FromServices] IUpdateStatusMovementUseCase useCase,
+    CancellationToken cancellationToken)
+    {
+        await useCase.Execute(id, request, cancellationToken);
+
+        var message = new SuccessfullyResponseJson("Updated the status successfully.");
+
+        return Ok(message);
     }
 }

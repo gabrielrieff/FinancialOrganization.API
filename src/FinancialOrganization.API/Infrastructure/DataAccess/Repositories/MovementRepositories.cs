@@ -32,9 +32,13 @@ public class MovementRepositories : IMovementRepository
             ;
     }
 
-    public Task<Movement?> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Movement?> GetById(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Movements
+            .AsNoTracking()
+            .Include(p => p.InstallmentPlan)
+                .ThenInclude(i => i.Installments)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task Register(Movement entity, CancellationToken cancellationToken)
@@ -63,7 +67,7 @@ public class MovementRepositories : IMovementRepository
 
     public void Update(Movement entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _dbContext.Movements.Update(entity);
     }
 
     private IQueryable<Movement> AddOrderToQuery(

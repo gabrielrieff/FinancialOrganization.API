@@ -34,8 +34,8 @@ public class InstallmentRepostories : IInstallmentRepository
         throw new NotImplementedException();
     }
 
-    public void Update(Installment entity, CancellationToken cancellationToken)
+    public void Update(List<Installment> entities, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _dbContext.Installments.UpdateRange(entities);
     }
 }

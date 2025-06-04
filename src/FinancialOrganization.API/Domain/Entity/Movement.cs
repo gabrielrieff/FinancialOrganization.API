@@ -10,7 +10,7 @@ public class Movement : EntityBase
     public string Description { get; private set; }
     public CategoryType Category { get; private set; }
     public Status Status { get; private set; }
-    public InstallmentPlan? InstallmentPlan { get; private set; } = default!;
+    public InstallmentPlan InstallmentPlan { get; private set; } = default!;
     public Guid? InstallmentPlanId { get; private set; }
     public Guid? CardID { get; private set; }
     public Card? Card { get; private set; } = default!;
@@ -22,7 +22,6 @@ public class Movement : EntityBase
         CategoryType category,
         //Guid userId,
         Guid? cardID = null,
-        Guid? installmentPlanId = null,
         Status status = Status.Waiting)
     {
         Type = type;
@@ -32,13 +31,23 @@ public class Movement : EntityBase
         Status = status;
         //UserId = userId;
         CardID = cardID;
-        InstallmentPlanId = installmentPlanId;
 
         Validate();
     }
 
 
     #region Setters
+    public void SetInstallmentPlanId(Guid installmentPlanId)
+    {
+        InstallmentPlanId = installmentPlanId;
+    }
+
+    public void SetStatus(Status status)
+    {
+        Status = status;
+        ValidateSetStatus();
+    }
+
     public void UpdateAmount(decimal amountTotal)
     {
         AmountTotal = amountTotal;
@@ -46,7 +55,7 @@ public class Movement : EntityBase
 
         Validate();
     }
-    
+
     public void UpdateCard(Guid cardID)
     {
         CardID = cardID;
@@ -93,5 +102,23 @@ public class Movement : EntityBase
                 throw new ErrorOnValidationException(error);
             }
         }
+
+    public void ValidateSetStatus()
+    {
+        List<string> error = [];
+
+        foreach (var item in InstallmentPlan.Installments)
+        {
+            if(Status == Status.Paid && item.Status == Status.Waiting)
+            {
+                error.Add($"Cannot set status to Paid when there are installment {item.Id} with Waiting status.");
+            }
+        }
+
+        if (error.Count > 0)
+        {
+            throw new ErrorOnValidationException(error);
+        }
+    }
     #endregion
 }
