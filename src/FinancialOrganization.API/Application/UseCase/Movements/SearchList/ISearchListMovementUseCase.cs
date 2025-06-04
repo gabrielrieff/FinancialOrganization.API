@@ -1,4 +1,4 @@
-﻿using FinancialOrganization.API.Communication.Response;
+﻿using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 

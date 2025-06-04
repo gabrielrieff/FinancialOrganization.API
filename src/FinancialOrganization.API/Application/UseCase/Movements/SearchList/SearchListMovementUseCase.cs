@@ -1,4 +1,4 @@
-﻿using FinancialOrganization.API.Communication.Response;
+﻿using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
@@ -32,6 +32,7 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
             total: result.Total,
             items: result.Items.Select(movement => new MovementJson
             {
+                Id = movement.Id,
                 AmountTotal = movement.AmountTotal,
                 CardID = movement.CardID,
                 Category = movement.Category,
@@ -40,10 +41,12 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
                 Status = movement.Status,
                 InstallmentPlan = new InstallmentPlanJson
                 {
+                    Id = movement.InstallmentPlan!.Id,
                     FinalDate = movement.InstallmentPlan!.FinalDate,
                     InitialDate = movement.InstallmentPlan!.InitialDate,
                     Installments = movement.InstallmentPlan!.Installments.Select(installment => new InstallmentJson
                     {
+                        Id = installment.Id,
                         InstallmentNumber = installment.InstallmentNumber,
                         Status = installment.Status,
                         Amount = installment.Amount,

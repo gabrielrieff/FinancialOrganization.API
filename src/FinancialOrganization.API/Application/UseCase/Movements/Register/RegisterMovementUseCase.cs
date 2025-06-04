@@ -44,13 +44,14 @@ public class RegisterMovementUseCase : IRegisterMovementUseCase
             cardID: request.CardID
             );
 
+        movement.SetInstallmentPlanId(installmentPlan.Id);
 
         var installments = new List<Installment>();
         for (int i = 0; i < installmentPlan.TotalInstallment; i++)
         {
             installments.Add(new Installment(
                 installmentNumber: i + 1,
-                status: Status.Paid,
+                status: Status.Waiting,
                 amount: (request.AmountTotal / installmentPlan.TotalInstallment),
                 dueDate: installmentPlan.InitialDate.AddMonths(i),
                 installmentPlanId: installmentPlan.Id
