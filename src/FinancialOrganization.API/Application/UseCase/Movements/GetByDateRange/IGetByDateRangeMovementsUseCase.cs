@@ -1,9 +1,8 @@
 ﻿using FinancialOrganization.API.Communication.Response.Movement;
-using FinancialOrganization.API.Domain.Entity;
 
 namespace FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 
-public interface IListAllMovementsUseCase
+public interface IGetByDateRangeMovementsUseCase
 {
-    public Task<MovementJson> Execute();
+    public Task<List<MovementJson>> Execute(DateTime initialDate, DateTime endDate);
 }

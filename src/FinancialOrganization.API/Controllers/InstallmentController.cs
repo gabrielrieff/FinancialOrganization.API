@@ -1,10 +1,12 @@
 ﻿using FinancialOrganization.API.Application.UseCase.Installments.UpdateStatus;
 using FinancialOrganization.API.Communication.Request.Installment;
 using FinancialOrganization.API.Communication.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialOrganization.API.Controllers;
 [Route("v1/[controller]")]
+[Authorize]
 [ApiController]
 public class InstallmentController : ControllerBase
 {

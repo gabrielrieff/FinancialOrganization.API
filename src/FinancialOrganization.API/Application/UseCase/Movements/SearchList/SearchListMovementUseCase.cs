@@ -35,16 +35,21 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
             {
                 Id = movement.Id,
                 AmountTotal = movement.AmountTotal,
-                CardID = movement.CardID,
                 Category = movement.Category,
                 Description = movement.Description,
                 Type = movement.Type,
                 Status = movement.Status,
+                Card = new CardJson
+                {
+                    Id = movement.Card.Id,
+                    Name = movement.Card.Name
+                },
                 InstallmentPlan = new InstallmentPlanJson
                 {
                     Id = movement.InstallmentPlan.Id,
                     FinalDate = movement.InstallmentPlan!.FinalDate,
                     InitialDate = movement.InstallmentPlan!.InitialDate,
+                    TotalInstallments = movement.InstallmentPlan.TotalInstallments,
                     Installments = movement.InstallmentPlan!.Installments.Select(installment => new InstallmentJson
                     {
                         Id = installment.Id,

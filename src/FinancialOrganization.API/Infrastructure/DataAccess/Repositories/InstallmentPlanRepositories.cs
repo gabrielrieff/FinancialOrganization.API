@@ -35,6 +35,6 @@ public class InstallmentPlanRepositories : IInstallmentPlanRepository
 
     public void Update(InstallmentPlan entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _dbContext.InstallmentPlans.Update(entity);
     }
 }

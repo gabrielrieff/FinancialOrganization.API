@@ -8,10 +8,12 @@ using FinancialOrganization.API.Communication.Request.Cards;
 using FinancialOrganization.API.Communication.Response;
 using FinancialOrganization.API.Communication.Response.Cards;
 using FinancialOrganization.API.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialOrganization.API.Controllers;
 [Route("v1/[controller]")]
+[Authorize]
 [ApiController]
 public class CardController : ControllerBase
 {
@@ -52,7 +54,6 @@ public class CardController : ControllerBase
         var result = await useCase.Execute(request, cancellationToken);
 
            return Ok(result);
-
     }
     
     [HttpGet()]

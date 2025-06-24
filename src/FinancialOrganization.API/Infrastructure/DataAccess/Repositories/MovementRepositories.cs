@@ -19,7 +19,7 @@ public class MovementRepositories : IMovementRepository
 
     public void Delete(Movement entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _dbContext.Movements.Remove(entity);
     }
 
     public async Task<Movement> Get()
@@ -28,8 +28,29 @@ public class MovementRepositories : IMovementRepository
             .AsNoTracking()
             .Include(p => p.InstallmentPlan)
                 .ThenInclude(i => i.Installments)
-            .FirstOrDefaultAsync(x => x.CardID == Guid.Parse("b68e67f8-b849-4b35-87f8-a34b76b0e808"))
+            .FirstOrDefaultAsync(x => x.Id == Guid.Parse("79d504b6-ed9b-4721-b69e-0d7edd169ebf"))
             ;
+    }
+
+    public async Task<List<Movement>> GetByDateRange(DateTime initialDate, DateTime endDate)
+    {
+        var startDate = new DateTime(initialDate.Year, initialDate.Month, 1);
+
+        var dayFinalDate = DateTime.DaysInMonth(endDate.Year, endDate.Month);
+
+        var finalDate = new DateTime(endDate.Year, endDate.Month, dayFinalDate);
+
+        var result = await _dbContext.Movements
+            .AsNoTracking()
+            .Where(m =>
+                m.InstallmentPlan.InitialDate <= finalDate &&
+                m.InstallmentPlan.FinalDate >= startDate)
+            .Include(c => c.Card)
+            .Include(p => p.InstallmentPlan)
+                .ThenInclude(i => i.Installments)
+            .ToListAsync();
+
+        return result;
     }
 
     public async Task<Movement?> GetById(Guid id, CancellationToken cancellationToken)
@@ -58,7 +79,16 @@ public class MovementRepositories : IMovementRepository
 
         var query = _dbContext.Movements
             .AsNoTracking()
-            .Where(m => string.IsNullOrWhiteSpace(input.Search) || m.Description.Contains(input.Search))
+            .Where(m =>
+                (string.IsNullOrWhiteSpace(input.Search) || m.Description.Contains(input.Search)) &&
+                (
+                    !startDate.HasValue ||
+                    (
+                        m.InstallmentPlan.Installments.Any(i => i.DueDate >= startDate && i.DueDate <= endDate)
+                        || (m.InstallmentPlan.InitialDate <= endDate && m.InstallmentPlan.FinalDate >= startDate)
+                    )
+                )
+            )
             .Select(m => new MovementDto
             {
                 Id = m.Id,
@@ -66,15 +96,20 @@ public class MovementRepositories : IMovementRepository
                 AmountTotal = m.AmountTotal,
                 Type = m.Type,
                 Category = m.Category,
+                CardID = m.CardID,
                 Status = m.Status,
                 CreatedAt = m.CreatedAt,
                 UpdatedAt = m.UpdatedAt,
+                Card = new CardDto
+                {
+                    Id = m.Card.Id,
+                    Name = m.Card.Name,
+                },
                 InstallmentPlan = new InstallmentPlanDto
                 {
-                    CardID = m.CardID,
                     FinalDate = m.InstallmentPlan.FinalDate,
                     InitialDate = m.InstallmentPlan.InitialDate,
-                    TotalInstallment = m.InstallmentPlan.TotalInstallment,
+                    TotalInstallments = m.InstallmentPlan.TotalInstallment,
                     Installments = m.InstallmentPlan.Installments
                         .Where(i => !startDate.HasValue || (i.DueDate >= startDate && i.DueDate <= endDate))
                         .Select(i => new InstallmentDto

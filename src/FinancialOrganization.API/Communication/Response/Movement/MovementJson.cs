@@ -11,6 +11,7 @@ public class MovementJson
     public CategoryType Category { get; set; }
     public Status Status { get; set; }
     public InstallmentPlanJson InstallmentPlan { get; set; }
+    public CardJson? Card { get; set; }
     public Guid? CardID { get; set; }
 }
 
@@ -19,6 +20,7 @@ public class InstallmentPlanJson
     public Guid Id { get; set; }
     public DateTime InitialDate { get; set; }
     public DateTime FinalDate { get; set; }
+    public int TotalInstallments { get; set; }
     public ICollection<InstallmentJson> Installments { get; set; }
 }
 
@@ -29,4 +31,10 @@ public class InstallmentJson
     public Status Status { get; set; }
     public decimal Amount { get; set; }
     public DateTime DueDate { get; set; }
+}
+
+public class CardJson
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
 }

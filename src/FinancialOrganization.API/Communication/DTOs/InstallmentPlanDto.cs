@@ -5,7 +5,7 @@ namespace FinancialOrganization.API.Communication.DTOs;
 public class InstallmentPlanDto
 {
     public Guid Id { get; set; }
-    public int TotalInstallment { get; set; }
+    public int TotalInstallments { get; set; }
     public DateTime InitialDate { get; set; }
     public DateTime FinalDate { get; set; }
     public Guid MovementId { get; set; }

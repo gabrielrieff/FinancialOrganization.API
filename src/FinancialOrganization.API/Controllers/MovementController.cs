@@ -1,4 +1,5 @@
-﻿using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
+﻿using FinancialOrganization.API.Application.UseCase.Movements.Delete;
+using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 using FinancialOrganization.API.Application.UseCase.Movements.Register;
 using FinancialOrganization.API.Application.UseCase.Movements.SearchList;
 using FinancialOrganization.API.Application.UseCase.Movements.Update;
@@ -9,10 +10,12 @@ using FinancialOrganization.API.Communication.Request.Moviment;
 using FinancialOrganization.API.Communication.Response;
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinancialOrganization.API.Controllers;
 [Route("v1/[controller]")]
+[Authorize]
 [ApiController]
 public class MovementController : ControllerBase
 {
@@ -28,11 +31,14 @@ public class MovementController : ControllerBase
 
 
     [HttpGet]
+    [Route("get-by-date-range")]
     public async Task<IActionResult> Get(
-        [FromServices] IListAllMovementsUseCase useCase,
+        [FromServices] IGetByDateRangeMovementsUseCase useCase,
+        [FromQuery] DateTime initialDate,
+        [FromQuery] DateTime endDate,
          CancellationToken cancellationToken)
     {
-        var result = await useCase.Execute();
+        var result = await useCase.Execute(initialDate, endDate);
         return Ok(result);
     }
 
@@ -112,6 +118,22 @@ public class MovementController : ControllerBase
         await useCase.Execute(id, request, cancellationToken);
 
         var message = new SuccessfullyResponseJson("Updated the successfully.");
+
+        return Ok(message);
+    }
+    
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(SuccessfullyResponseJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Delete(
+    [FromRoute] Guid id,
+    [FromServices] IDeleteMovementUseCase useCase,
+    CancellationToken cancellationToken)
+    {
+        await useCase.Execute(id, cancellationToken);
+
+        var message = new SuccessfullyResponseJson("Delete the successfully.");
 
         return Ok(message);
     }

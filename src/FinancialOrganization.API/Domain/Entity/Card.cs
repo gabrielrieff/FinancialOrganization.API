@@ -6,10 +6,13 @@ namespace FinancialOrganization.API.Domain.Entity;
 public class Card : EntityBase
 {
     public string Name { get; private set; }
+    public Guid UserId { get; private set; }
+    public User User { get; private set; } = default!;
 
-    public Card(string name)
+    public Card(string name, Guid userId)
     {
         Name = name;
+        UserId = userId;
 
         Validate();
     }

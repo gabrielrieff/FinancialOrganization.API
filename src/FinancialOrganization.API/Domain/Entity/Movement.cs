@@ -14,6 +14,8 @@ public class Movement : EntityBase
     public Guid? InstallmentPlanId { get; private set; }
     public Guid? CardID { get; private set; }
     public Card? Card { get; private set; } = default!;
+    public Guid UserId { get; private set; }
+    public User User { get; private set; } = default!;
 
     public Movement(
         MovementType type,
@@ -88,16 +90,16 @@ public class Movement : EntityBase
 
             if (string.IsNullOrWhiteSpace(Description))
                 error.Add("Description is required");
-            else if (Description.Length > 100)
+            if (Description.Length > 100)
                 error.Add("Description must be less than 100 characters");
-            else if (Description.Length < 10)
+            if (Description.Length < 10)
                 error.Add("Description must be more than 10 characters");
-            else if (AmountTotal <= 0)
+            if (AmountTotal <= 0)
                 error.Add("Amount must be greater than 0");
-            else if (Category.Equals(typeof(CategoryType)))
+            if (Category.Equals(typeof(CategoryType)))
                 error.Add("Category is required");
-
-            if(error.Count > 0)
+            
+        if(error.Count > 0)
             {
                 throw new ErrorOnValidationException(error);
             }
