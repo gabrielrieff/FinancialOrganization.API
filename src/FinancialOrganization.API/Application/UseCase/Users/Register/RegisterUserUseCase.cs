@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using FinancialOrganization.API.Communication.Request.Users;
+﻿using FinancialOrganization.API.Communication.Request.Users;
 using FinancialOrganization.API.Communication.Response.Users;
 using FinancialOrganization.API.Domain.Entity;
 using FinancialOrganization.API.Domain.Repositories;

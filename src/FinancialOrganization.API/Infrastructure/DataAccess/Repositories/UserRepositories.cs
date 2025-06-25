@@ -24,6 +24,12 @@ public class UserRepositories : IUserRepository
         return await _dbContext.Users.AnyAsync(u => u.Email == email);
     }
 
+    public async Task<User?> GetByEmail(string email)
+    {
+        return await _dbContext.Users.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email);
+    }
+
     public Task<User?> GetById(Guid id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

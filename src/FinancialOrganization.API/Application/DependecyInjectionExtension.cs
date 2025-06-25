@@ -4,6 +4,7 @@ using FinancialOrganization.API.Application.UseCase.Cards.ListAll;
 using FinancialOrganization.API.Application.UseCase.Cards.Register;
 using FinancialOrganization.API.Application.UseCase.Cards.Update;
 using FinancialOrganization.API.Application.UseCase.Installments.UpdateStatus;
+using FinancialOrganization.API.Application.UseCase.Login;
 using FinancialOrganization.API.Application.UseCase.Movements.Delete;
 using FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 using FinancialOrganization.API.Application.UseCase.Movements.Register;
@@ -44,6 +45,8 @@ public static class DependecyInjectionExtension
         
         //user
         services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
-
+        
+        //login
+        services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
     }
 }
