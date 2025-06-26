@@ -1,6 +1,5 @@
 ﻿using FinancialOrganization.API.Domain.Entity;
 using FinancialOrganization.API.Domain.Repositories.Installments;
-using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 using FinancialOrganization.API.Infrasctructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,11 +27,6 @@ public class InstallmentRepostories : IInstallmentRepository
     public async Task Register(List<Installment> entities, CancellationToken cancellationToken)
     {
         await _dbContext.Installments.AddRangeAsync(entities, cancellationToken);
-    }
-
-    public Task<SearchOutput<Installment>> Search(SearchInput input, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 
     public void Update(List<Installment> entities, CancellationToken cancellationToken)

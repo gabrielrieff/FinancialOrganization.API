@@ -22,7 +22,7 @@ public class Movement : EntityBase
         decimal amountTotal,
         string description,
         CategoryType category,
-        //Guid userId,
+        Guid userId,
         Guid? cardID = null,
         Status status = Status.Waiting)
     {
@@ -31,7 +31,7 @@ public class Movement : EntityBase
         Description = description;
         Category = category;
         Status = status;
-        //UserId = userId;
+        UserId = userId;
         CardID = cardID;
 
         Validate();

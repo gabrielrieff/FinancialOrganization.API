@@ -1,21 +1,25 @@
 ﻿
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Repositories.Movements;
+using FinancialOrganization.API.Domain.Services.LoggedUser;
 
 namespace FinancialOrganization.API.Application.UseCase.Movements.ListAll;
 
 public class GetByDateRangeMovementsUseCase : IGetByDateRangeMovementsUseCase
 {
     private readonly IMovementRepository _movementRepo;
+    private readonly ILoggedUser _loggedUser;
 
-    public GetByDateRangeMovementsUseCase(IMovementRepository movementRepo)
+    public GetByDateRangeMovementsUseCase(IMovementRepository movementRepo, ILoggedUser loggedUser)
     {
         _movementRepo = movementRepo;
+        _loggedUser = loggedUser;
     }
 
     public async Task<List<MovementJson>> Execute(DateTime initialDate, DateTime endDate)
     {
-        var result = await _movementRepo.GetByDateRange(initialDate, endDate);
+        var user = await _loggedUser.Get();
+        var result = await _movementRepo.GetByDateRange(user, initialDate, endDate);
 
         var mappedResult = result.Select(movement => new MovementJson
         {

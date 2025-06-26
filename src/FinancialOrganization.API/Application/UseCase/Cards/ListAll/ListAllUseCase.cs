@@ -18,7 +18,7 @@ public class ListAllUseCase : IListAllUseCase
     public async Task<ListAllResponse> Execute(CancellationToken cancellationToken)
     {
         var user = await _loggedUser.Get();
-        var result = await _repository.GetAll(user.Id, cancellationToken);
+        var result = await _repository.GetAll(user, cancellationToken);
 
         return new ListAllResponse
         {

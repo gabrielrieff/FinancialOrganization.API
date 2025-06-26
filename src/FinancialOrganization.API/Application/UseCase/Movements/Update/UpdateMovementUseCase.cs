@@ -3,6 +3,7 @@ using FinancialOrganization.API.Domain.Repositories.Installments;
 using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Domain.Repositories;
 using FinancialOrganization.API.Exception.ExceptionsBase;
+using FinancialOrganization.API.Domain.Services.LoggedUser;
 
 namespace FinancialOrganization.API.Application.UseCase.Movements.Update;
 
@@ -11,20 +12,23 @@ public class UpdateMovementUseCase : IUpdateMovementUseCase
     private readonly IMovementRepository _movementRepository;
     private readonly IInstallmentPlanRepository _installmentPlanRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILoggedUser _loggedUser;
 
-    public UpdateMovementUseCase(
-        IMovementRepository movementRepository, 
+    public UpdateMovementUseCase(IMovementRepository movementRepository, 
         IInstallmentPlanRepository installmentPlanRepository, 
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        ILoggedUser loggedUser)
     {
         _movementRepository = movementRepository;
         _installmentPlanRepository = installmentPlanRepository;
         _unitOfWork = unitOfWork;
+        _loggedUser = loggedUser;
     }
 
     public async Task Execute(Guid movementId, UpdateMovementJson request, CancellationToken cancellationToken)
     {
-        var movement = await _movementRepository.GetById(movementId, cancellationToken);
+        var user = await _loggedUser.Get();
+        var movement = await _movementRepository.GetById(user, movementId, cancellationToken);
 
         if (movement is null)
         {

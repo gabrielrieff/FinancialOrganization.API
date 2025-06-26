@@ -5,5 +5,5 @@ namespace FinancialOrganization.API.Domain.Repositories.Cards;
 
 public interface ICardRepository : IGenegicRepository<Card>, ISearchableRepository<Card>
 {
-    Task<IList<Card>> GetAll(Guid userId, CancellationToken cancellationToken);
+    Task<IList<Card>> GetAll(User user, CancellationToken cancellationToken);
 }

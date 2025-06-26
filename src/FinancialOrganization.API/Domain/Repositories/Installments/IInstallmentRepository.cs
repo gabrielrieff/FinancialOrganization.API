@@ -1,9 +1,8 @@
 ﻿using FinancialOrganization.API.Domain.Entity;
-using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 
 namespace FinancialOrganization.API.Domain.Repositories.Installments;
 
-public interface IInstallmentRepository : ISearchableRepository<Installment>
+public interface IInstallmentRepository
 {
     public Task Register(List<Installment> entities, CancellationToken cancellationToken);
     public void Update(List<Installment> entities, CancellationToken cancellationToken);

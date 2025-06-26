@@ -21,14 +21,19 @@ public class CardRepositories : ICardRepository
         _dbContext.Cards.Remove(entity);
     }
 
-    public async Task<IList<Card>> GetAll(Guid userId, CancellationToken cancellationToken)
+    public async Task<IList<Card>> GetAll(User user, CancellationToken cancellationToken)
     {
-        return await _dbContext.Cards.AsNoTracking().ToListAsync(cancellationToken);
+        return await _dbContext.Cards
+            .AsNoTracking()
+            .Where(x => x.UserId == user.Id)
+            .ToListAsync();
     }
 
-    public async Task<Card?> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Card?> GetById(User user, Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Cards.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        return await _dbContext.Cards
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == user.Id, cancellationToken);
     }
 
     public async Task Register(Card entity, CancellationToken cancellationToken)
@@ -36,13 +41,13 @@ public class CardRepositories : ICardRepository
         await _dbContext.Cards.AddAsync(entity);
     }
 
-    public async Task<SearchOutput<Card>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<Card>> Search(User user, SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
         var query = _dbContext.Cards.AsNoTracking();
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
         if (!string.IsNullOrWhiteSpace(input.Search))
-            query = query.Where(x => x.Name.Contains(input.Search));
+            query = query.Where(x => x.Name.Contains(input.Search) && x.UserId == user.Id);
         var total = await query.CountAsync();
         var items = await query
             .Skip(toSkip)

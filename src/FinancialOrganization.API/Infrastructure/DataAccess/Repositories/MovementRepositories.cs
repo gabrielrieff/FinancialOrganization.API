@@ -22,17 +22,16 @@ public class MovementRepositories : IMovementRepository
         _dbContext.Movements.Remove(entity);
     }
 
-    public async Task<Movement> Get()
+    public async Task<Movement?> Get(User user, Guid movementId)
     {
        return await _dbContext.Movements
             .AsNoTracking()
             .Include(p => p.InstallmentPlan)
                 .ThenInclude(i => i.Installments)
-            .FirstOrDefaultAsync(x => x.Id == Guid.Parse("79d504b6-ed9b-4721-b69e-0d7edd169ebf"))
-            ;
+            .FirstOrDefaultAsync(x => x.Id == movementId && x.UserId == user.Id);
     }
 
-    public async Task<List<Movement>> GetByDateRange(DateTime initialDate, DateTime endDate)
+    public async Task<List<Movement>> GetByDateRange(User user, DateTime initialDate, DateTime endDate)
     {
         var startDate = new DateTime(initialDate.Year, initialDate.Month, 1);
 
@@ -43,6 +42,7 @@ public class MovementRepositories : IMovementRepository
         var result = await _dbContext.Movements
             .AsNoTracking()
             .Where(m =>
+                m.UserId == user.Id &&
                 m.InstallmentPlan.InitialDate <= finalDate &&
                 m.InstallmentPlan.FinalDate >= startDate)
             .Include(c => c.Card)
@@ -53,13 +53,13 @@ public class MovementRepositories : IMovementRepository
         return result;
     }
 
-    public async Task<Movement?> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Movement?> GetById(User user, Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Movements
             .AsNoTracking()
             .Include(p => p.InstallmentPlan)
                 .ThenInclude(i => i.Installments)
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == user.Id);
     }
 
     public async Task Register(Movement entity, CancellationToken cancellationToken)
@@ -67,7 +67,7 @@ public class MovementRepositories : IMovementRepository
         await _dbContext.Movements.AddAsync(entity, cancellationToken);
     }
 
-    public async Task<SearchOutput<MovementDto>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<MovementDto>> Search(User user, SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
 
@@ -80,6 +80,7 @@ public class MovementRepositories : IMovementRepository
         var query = _dbContext.Movements
             .AsNoTracking()
             .Where(m =>
+                m.UserId == user.Id &&
                 (string.IsNullOrWhiteSpace(input.Search) || m.Description.Contains(input.Search)) &&
                 (
                     !startDate.HasValue ||

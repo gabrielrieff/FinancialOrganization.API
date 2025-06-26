@@ -2,16 +2,19 @@
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
+using FinancialOrganization.API.Domain.Services.LoggedUser;
 
 namespace FinancialOrganization.API.Application.UseCase.Movements.SearchList;
 
 public class SearchListMovementUseCase : ISearchListMovementUseCase
 {
     private readonly IMovementRepository _movementRepo;
+    private readonly ILoggedUser _loggedUser;
 
-    public SearchListMovementUseCase(IMovementRepository movementRepo)
+    public SearchListMovementUseCase(IMovementRepository movementRepo, ILoggedUser loggedUser)
     {
         _movementRepo = movementRepo;
+        _loggedUser = loggedUser;
     }
 
     public async Task<SearchOutput<MovementJson>> Execute(SearchListRequest request, CancellationToken cancellationToken)
@@ -24,8 +27,8 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
             orderBy: request.Sort,
             order: request.Dir
         );
-
-        var result = await _movementRepo.Search(search, cancellationToken);
+        var user = await _loggedUser.Get();
+        var result = await _movementRepo.Search(user, search, cancellationToken);
 
         return new SearchOutput<MovementJson>(
             currentPage: result.CurrentPage,

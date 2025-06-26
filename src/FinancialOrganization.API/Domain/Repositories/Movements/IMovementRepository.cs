@@ -6,6 +6,6 @@ namespace FinancialOrganization.API.Domain.Repositories.Movements;
 
 public interface IMovementRepository : IGenegicRepository<Movement>, ISearchableRepository<MovementDto>
 {
-    public Task<Movement> Get();
-    public Task<List<Movement>> GetByDateRange(DateTime initialDate, DateTime endDate);
+    public Task<Movement?> Get(User user, Guid movementId);
+    public Task<List<Movement>> GetByDateRange(User user, DateTime initialDate, DateTime endDate);
 }
