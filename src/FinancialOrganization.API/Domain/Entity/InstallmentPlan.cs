@@ -4,14 +4,14 @@ namespace FinancialOrganization.API.Domain.Entity;
 
 public class InstallmentPlan : EntityBase
 {
-    public int TotalInstallment { get; private set; }
-    public DateTime InitialDate { get; private set; }
-    public DateTime FinalDate { get; private set; }
-    public Guid MovementId { get; private set; }
-    public Guid? CardID { get; private set; }
-    public Movement Movement { get; private set; } = default!;
-    public Card? Card { get; private set; } = default!;
-    public ICollection<Installment> Installments { get; private set; } = new List<Installment>();
+    public int TotalInstallment { get;  set; }
+    public DateTime InitialDate { get;  set; }
+    public DateTime FinalDate { get;  set; }
+    public Guid MovementId { get;  set; }
+    public Guid? CardID { get;  set; }
+    public Movement Movement { get;  set; } = default!;
+    public Card? Card { get;  set; } = default!;
+    public List<Installment> Installments { get;  set; } = new List<Installment>();
 
     public InstallmentPlan(
         int totalInstallment,
@@ -49,6 +49,11 @@ public class InstallmentPlan : EntityBase
         CardID = cardID;
         UpdatedAt = DateTime.UtcNow;
         Validate();
+    }
+
+    public void setInstalments(List<Installment> installments)
+    {
+        Installments = installments;
     }
 
     public void Validate()

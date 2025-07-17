@@ -25,8 +25,8 @@ public class MovementController : ControllerBase
         [FromBody] MovimentRegisterJson request,
          CancellationToken cancellationToken)
     {
-        await useCase.Execute(request, cancellationToken);
-        return Ok();
+        var response = await useCase.Execute(request, cancellationToken);
+        return Created(String.Empty, response);
     }
 
 

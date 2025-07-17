@@ -47,7 +47,10 @@ public class MovementRepositories : IMovementRepository
                 m.InstallmentPlan.FinalDate >= startDate)
             .Include(c => c.Card)
             .Include(p => p.InstallmentPlan)
-                .ThenInclude(i => i.Installments)
+                .ThenInclude(i => i.Installments.Where(
+                    i => 
+                    i.DueDate <= finalDate &&
+                    i.DueDate >= startDate))
             .ToListAsync();
 
         return result;
@@ -59,7 +62,7 @@ public class MovementRepositories : IMovementRepository
             .AsNoTracking()
             .Include(p => p.InstallmentPlan)
                 .ThenInclude(i => i.Installments)
-            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == user.Id);
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == user.Id, cancellationToken: cancellationToken);
     }
 
     public async Task Register(Movement entity, CancellationToken cancellationToken)
@@ -67,7 +70,7 @@ public class MovementRepositories : IMovementRepository
         await _dbContext.Movements.AddAsync(entity, cancellationToken);
     }
 
-    public async Task<SearchOutput<MovementDto>> Search(User user, SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<Movement>> Search(User user, SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
 
@@ -79,9 +82,10 @@ public class MovementRepositories : IMovementRepository
 
         var query = _dbContext.Movements
             .AsNoTracking()
+            .Include(m => m.InstallmentPlan)
+                .ThenInclude(p => p.Installments)
             .Where(m =>
                 m.UserId == user.Id &&
-                (string.IsNullOrWhiteSpace(input.Search) || m.Description.Contains(input.Search)) &&
                 (
                     !startDate.HasValue ||
                     (
@@ -89,40 +93,7 @@ public class MovementRepositories : IMovementRepository
                         || (m.InstallmentPlan.InitialDate <= endDate && m.InstallmentPlan.FinalDate >= startDate)
                     )
                 )
-            )
-            .Select(m => new MovementDto
-            {
-                Id = m.Id,
-                Description = m.Description,
-                AmountTotal = m.AmountTotal,
-                Type = m.Type,
-                Category = m.Category,
-                CardID = m.CardID,
-                Status = m.Status,
-                CreatedAt = m.CreatedAt,
-                UpdatedAt = m.UpdatedAt,
-                Card = new CardDto
-                {
-                    Id = m.Card.Id,
-                    Name = m.Card.Name,
-                },
-                InstallmentPlan = new InstallmentPlanDto
-                {
-                    FinalDate = m.InstallmentPlan.FinalDate,
-                    InitialDate = m.InstallmentPlan.InitialDate,
-                    TotalInstallments = m.InstallmentPlan.TotalInstallment,
-                    Installments = m.InstallmentPlan.Installments
-                        .Where(i => !startDate.HasValue || (i.DueDate >= startDate && i.DueDate <= endDate))
-                        .Select(i => new InstallmentDto
-                        {
-                            Id = i.Id,
-                            InstallmentNumber = i.InstallmentNumber,
-                            DueDate = i.DueDate,
-                            Amount = i.Amount,
-                            Status = i.Status
-                        }).ToList()
-                }
-            });
+            );
 
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
 
@@ -133,7 +104,7 @@ public class MovementRepositories : IMovementRepository
             .Take(input.PerPage)
             .ToListAsync(cancellationToken);
 
-        return new SearchOutput<MovementDto>(input.Page, input.PerPage, total, items);
+        return new SearchOutput<Movement>(input.Page, input.PerPage, total, items);
     }
 
     public void Update(Movement entity, CancellationToken cancellationToken)
@@ -141,8 +112,8 @@ public class MovementRepositories : IMovementRepository
         _dbContext.Movements.Update(entity);
     }
 
-    private IQueryable<MovementDto> AddOrderToQuery(
-        IQueryable<MovementDto> query,
+    private IQueryable<Movement> AddOrderToQuery(
+        IQueryable<Movement> query,
         string orderProperty,
         SearchOrder order
     )
@@ -153,8 +124,6 @@ public class MovementRepositories : IMovementRepository
                 .ThenBy(x => x.Id),
             ("name", SearchOrder.Desc) => query.OrderByDescending(x => x.Description)
                 .ThenByDescending(x => x.Id),
-            ("id", SearchOrder.Asc) => query.OrderBy(x => x.Id),
-            ("id", SearchOrder.Desc) => query.OrderByDescending(x => x.Id),
             ("createdat", SearchOrder.Asc) => query.OrderBy(x => x.CreatedAt),
             ("createdat", SearchOrder.Desc) => query.OrderByDescending(x => x.CreatedAt),
             _ => query.OrderBy(x => x.Description)

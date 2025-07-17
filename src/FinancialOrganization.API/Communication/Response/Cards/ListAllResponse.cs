@@ -1,6 +1,8 @@
-﻿namespace FinancialOrganization.API.Communication.Response.Cards;
+﻿using FinancialOrganization.API.Communication.DTOs;
 
-public class ListAllResponse
+namespace FinancialOrganization.API.Communication.Response.Cards;
+
+public class AllCards
 {
-    public IReadOnlyList<RegisterCardResponse> Items { get; set; } = [];
+    public List<CardDto> Items { get; set; } = [];
 }

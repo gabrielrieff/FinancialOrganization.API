@@ -1,5 +1,6 @@
 using System.Text;
 using FinancialOrganization.API.Application;
+using FinancialOrganization.API.Application.Mapster;
 using FinancialOrganization.API.Domain.Security.Tokens;
 using FinancialOrganization.API.Filters;
 using FinancialOrganization.API.Infrasctructure;
@@ -17,6 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMvc((opt) => opt.Filters.Add(typeof(ExceptionFilter)));
 
 builder.Services.AddApplication();
+builder.Services.AddMappings();
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddCors(options =>

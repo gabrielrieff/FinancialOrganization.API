@@ -13,5 +13,5 @@ public class InstallmentPlanDto
 
     public MovementDto Movement { get; set; } = default!;
     public Card? Card { get; set; } = default!;
-    public ICollection<InstallmentDto> Installments { get; set; } = [];
+    public List<InstallmentDto> Installments { get; set; } = new List<InstallmentDto>();
 }

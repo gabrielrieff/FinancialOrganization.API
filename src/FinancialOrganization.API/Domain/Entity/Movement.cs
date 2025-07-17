@@ -43,6 +43,11 @@ public class Movement : EntityBase
     {
         InstallmentPlanId = installmentPlanId;
     }
+    
+    public void SetInstallmentPlan(InstallmentPlan installmentPlan)
+    {
+        InstallmentPlan = installmentPlan;
+    }
 
     public void SetStatus(Status status)
     {

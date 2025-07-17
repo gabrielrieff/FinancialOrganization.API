@@ -1,8 +1,10 @@
-﻿using FinancialOrganization.API.Communication.Request;
+﻿using FinancialOrganization.API.Communication.DTOs;
+using FinancialOrganization.API.Communication.Request;
 using FinancialOrganization.API.Communication.Response.Movement;
 using FinancialOrganization.API.Domain.Repositories.Movements;
 using FinancialOrganization.API.Domain.SeedWork.SearchableRepository;
 using FinancialOrganization.API.Domain.Services.LoggedUser;
+using MapsterMapper;
 
 namespace FinancialOrganization.API.Application.UseCase.Movements.SearchList;
 
@@ -10,14 +12,16 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
 {
     private readonly IMovementRepository _movementRepo;
     private readonly ILoggedUser _loggedUser;
+    private readonly IMapper _mapper;
 
-    public SearchListMovementUseCase(IMovementRepository movementRepo, ILoggedUser loggedUser)
+    public SearchListMovementUseCase(IMovementRepository movementRepo, ILoggedUser loggedUser, IMapper mapper)
     {
         _movementRepo = movementRepo;
         _loggedUser = loggedUser;
+        _mapper = mapper;
     }
 
-    public async Task<SearchOutput<MovementJson>> Execute(SearchListRequest request, CancellationToken cancellationToken)
+    public async Task<SearchOutput<MovementDto>> Execute(SearchListRequest request, CancellationToken cancellationToken)
     {
         var search = new SearchInput(
             page: request.Page,
@@ -30,39 +34,11 @@ public class SearchListMovementUseCase : ISearchListMovementUseCase
         var user = await _loggedUser.Get();
         var result = await _movementRepo.Search(user, search, cancellationToken);
 
-        return new SearchOutput<MovementJson>(
+        return new SearchOutput<MovementDto>(
             currentPage: result.CurrentPage,
             perPage: result.PerPage,
             total: result.Total,
-            items: result.Items.Select(movement => new MovementJson
-            {
-                Id = movement.Id,
-                AmountTotal = movement.AmountTotal,
-                Category = movement.Category,
-                Description = movement.Description,
-                Type = movement.Type,
-                Status = movement.Status,
-                Card = new CardJson
-                {
-                    Id = movement.Card.Id,
-                    Name = movement.Card.Name
-                },
-                InstallmentPlan = new InstallmentPlanJson
-                {
-                    Id = movement.InstallmentPlan.Id,
-                    FinalDate = movement.InstallmentPlan!.FinalDate,
-                    InitialDate = movement.InstallmentPlan!.InitialDate,
-                    TotalInstallments = movement.InstallmentPlan.TotalInstallments,
-                    Installments = movement.InstallmentPlan!.Installments.Select(installment => new InstallmentJson
-                    {
-                        Id = installment.Id,
-                        InstallmentNumber = installment.InstallmentNumber,
-                        Status = installment.Status,
-                        Amount = installment.Amount,
-                        DueDate = installment.DueDate
-                    }).ToList()
-                }
-            }).ToList()
+            items: result.Items.Select(x => _mapper.Map<MovementDto>(x)).ToList()
         );
     }
 }
