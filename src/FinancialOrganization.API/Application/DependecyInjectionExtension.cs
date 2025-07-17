@@ -30,7 +30,7 @@ public static class DependecyInjectionExtension
         services.AddScoped<ISearchListUseCase, SearchListUseCase>();
         services.AddScoped<IDeleteCardUseCase, DeleteCardUseCase>();
         services.AddScoped<IListAllUseCase, ListAllUseCase>();
-
+        
         //Movement
         services.AddScoped<IRegisterMovementUseCase, RegisterMovementUseCase>();
         services.AddScoped<IGetByDateRangeMovementsUseCase, GetByDateRangeMovementsUseCase>();

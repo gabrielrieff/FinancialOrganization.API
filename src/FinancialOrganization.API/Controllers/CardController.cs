@@ -82,7 +82,7 @@ public class CardController : ControllerBase
     }
     
     [HttpDelete]
-    [Route("{id}/dalete")]
+    [Route("{id}/delete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
